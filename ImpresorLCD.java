@@ -46,15 +46,15 @@ public class ImpresorLCD {
      * @param size Tamaño Segmento
      * @param caracter Caracter Segmento
      */    
-    private void adicionarLinea(String[][] matriz, int[] punto, String posFija,
+    private void adicionarLinea( int[] punto, String posFija,
             int size, String caracter) {
-
+        
         if (posFija.equalsIgnoreCase(POSICION_X)) 
         {
             for (int y = 1; y <= size; y++) 
             {
                 int valor = punto[1] + y;
-                matriz[punto[0]][valor] = caracter;
+               matrizImpr[punto[0]][valor] = caracter;
             }
         } 
         else 
@@ -62,7 +62,7 @@ public class ImpresorLCD {
             for (int i = 1; i <= size; i++) 
             {
                 int valor = punto[0] + i;
-                matriz[valor][punto[1]] = caracter;
+                matrizImpr[valor][punto[1]] = caracter;
             }
         }
     }
@@ -77,32 +77,25 @@ public class ImpresorLCD {
 
         switch (segmento) {
             case 1:
-                adicionarLinea(this.matrizImpr, this.pf1, POSICION_Y,
-                        this.size, CARACTER_VERTICAL);
+                adicionarLinea( this.pf1, POSICION_Y,this.size, CARACTER_VERTICAL);
                 break;
             case 2:
-                adicionarLinea(this.matrizImpr, this.pf2, POSICION_Y,
-                        this.size, CARACTER_VERTICAL);
+                adicionarLinea( this.pf2, POSICION_Y,this.size, CARACTER_VERTICAL);
                 break;
             case 3:
-                adicionarLinea(this.matrizImpr, this.pf5, POSICION_Y,
-                        this.size, CARACTER_VERTICAL);
+                adicionarLinea(this.pf5, POSICION_Y,this.size, CARACTER_VERTICAL);
                 break;
             case 4:
-                adicionarLinea(this.matrizImpr, this.pf4, POSICION_Y,
-                        this.size, CARACTER_VERTICAL);
+                adicionarLinea(this.pf4, POSICION_Y,this.size, CARACTER_VERTICAL);
                 break;
             case 5:
-                adicionarLinea(this.matrizImpr, this.pf1, POSICION_X,
-                        this.size, CARACTER_HORIZONTAL);
+                adicionarLinea(this.pf1, POSICION_X,this.size, CARACTER_HORIZONTAL);
                 break;
             case 6:
-                adicionarLinea(this.matrizImpr, this.pf2, POSICION_X,
-                        this.size, CARACTER_HORIZONTAL);
+                adicionarLinea( this.pf2, POSICION_X, this.size, CARACTER_HORIZONTAL);
                 break;
             case 7:
-                adicionarLinea(this.matrizImpr, this.pf3, POSICION_X,
-                        this.size, CARACTER_HORIZONTAL);
+                adicionarLinea( this.pf3, POSICION_X,this.size, CARACTER_HORIZONTAL);
                 break;
             default:
                 break;
@@ -117,14 +110,19 @@ public class ImpresorLCD {
      * @param numero Digito
      */
     private void adicionarDigito(int numero) {
+        
 
         // Establece los segmentos de cada numero
         List<Integer> segList = new ArrayList<>();
+     
+        
+        
 
         switch (numero) {
             case 1:
                 segList.add(3);
                 segList.add(4);
+           
                 break;
             case 2:
                 segList.add(5);
@@ -227,14 +225,14 @@ public class ImpresorLCD {
         this.totalFilas = this.filasDig;
 
         // Calcula el total de columnas de la matriz en la que se almacenaran los digitos
-        this.totalColum = (this.columDig * numeroImp.length())
-                + (espacio * numeroImp.length());
+        this.totalColum = (this.columDig * numeroImp.length())+ (espacio * numeroImp.length());
 
         // crea matriz para almacenar los numero a imprimir
         this.matrizImpr = new String[this.totalFilas][this.totalColum];
 
         // crea el arreglo de digitos
-        digitos = numeroImp.toCharArray();
+        
+        
 
         // Inicializa matriz
         for (int i = 0; i < this.totalFilas; i++) {
@@ -242,7 +240,7 @@ public class ImpresorLCD {
                 this.matrizImpr[i][j] = " ";
             }
         }
-
+        digitos = numeroImp.toCharArray();
         for (char digito : digitos) {
             
             //Valida que el caracter sea un digito
@@ -256,9 +254,11 @@ public class ImpresorLCD {
 
             //Calcula puntos fijos
             this.pf1[0] = 0;
+            
             this.pf1[1] = 0 + pivotX;
 
             this.pf2[0] = (this.filasDig / 2);
+            
             this.pf2[1] = 0 + pivotX;
 
             this.pf3[0] = (this.filasDig - 1);
@@ -297,50 +297,43 @@ public class ImpresorLCD {
         
         String[] parametros;
         
-        int tam;
+        int size;
 
         if (!comando.contains(",")) {
-            throw new IllegalArgumentException("Cadena " + comando
-                    + " no contiene caracter ,");
+            throw new IllegalArgumentException("Cadena " + comando + " no contiene caracter ,");
         }
         
         //Se hace el split de la cadena
         parametros = comando.split(",");
         
         //Valida la cantidad de parametros
-        if(parametros.length>2)
+        if(parametros.length>2 || parametros.length<2)
         {
-           throw new IllegalArgumentException("Cadena " + comando
-                    + " contiene mas caracter ,"); 
+           throw new IllegalArgumentException("Cadena " + comando+ " debe contener dos parametros de entrada  "); 
         }
+       
         
-        //Valida la cantidad de parametros
-        if(parametros.length<2)
-        {
-           throw new IllegalArgumentException("Cadena " + comando
-                    + " no contiene los parametros requeridos"); 
-        }
         
         //Valida que el parametro size sea un numerico
-        if(isNumeric(parametros[0]))
+        if(isNumeric(parametros[0])&& isNumeric(parametros[1]))
         {
-            tam = Integer.parseInt(parametros[0]);
+            size = Integer.parseInt(parametros[0]);
             
             // se valida que el size este entre 1 y 10
-            if(tam <1 || tam >10)
+            if(size <1 || size >10)
             {
-                throw new IllegalArgumentException("El parametro size ["+tam
+                throw new IllegalArgumentException("El parametro size ["+size
                         + "] debe estar entre 1 y 10");
             }
         }
         else
         {
-            throw new IllegalArgumentException("Parametro Size [" + parametros[0]
-                    + "] no es un numero");
+            throw new IllegalArgumentException("Parametro  [" + parametros[0]
+                    + "] y/o [" + parametros[1]+ "] no son numeros");
         }
 
         // Realiza la impresion del numero
-        imprimirNumero(tam, parametros[1],espacioDig);
+        imprimirNumero(size, parametros[1],espacioDig);
 
     }
 

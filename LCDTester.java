@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
-import javax.swing.JOptionPane;
 
 public class LCDTester {
 
@@ -11,7 +10,7 @@ public class LCDTester {
     public static void main(String[] args) {
 
         // Establece los segmentos de cada numero
-        List<String> listaComando = new ArrayList<>();
+        List<String> listaEntradas = new ArrayList<>();
         String comando;
         int espacioDig;
         
@@ -47,19 +46,21 @@ public class LCDTester {
                     comando = lector.next();
                     if(!comando.equalsIgnoreCase(CADENA_FINAL))
                     {
-                        listaComando.add(comando);
+                        listaEntradas.add(comando);
                     }
                 }while (!comando.equalsIgnoreCase(CADENA_FINAL)); 
             }
 
             ImpresorLCD impresorLCD = new ImpresorLCD();
 
-            Iterator<String> iterator = listaComando.iterator();
+            Iterator<String> iterator = listaEntradas.iterator();
             while (iterator.hasNext()) 
             {
                 try 
                 {
+                      
                     impresorLCD.procesar(iterator.next(), espacioDig);
+                  
                 } catch (Exception ex) 
                 {
                     System.out.println("Error: "+ex.getMessage());
